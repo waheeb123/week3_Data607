@@ -1,0 +1,218 @@
+---
+title: "Week3_data_607"
+author: "waheeb Algabri"
+output:
+  pdf_document: default
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(eval = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(openintro)
+```
+
+
+
+Using the 173 majors listed in fivethirtyeight.com’s College Majors dataset [https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/], provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r}
+# load and read data 
+data <- read.csv(url("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"))
+
+```
+
+#### provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r}
+# This code uses the grep function to search for the pattern "DATA" or "STATISTICS" in the Major column of the data data frame
+
+selected_majors <- data[grep("DATA|STATISTICS", data$Major),]
+print(selected_majors)
+```
+
+
+#### Write code that transforms the data below:
+
+[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+[13] "olive"        "salal berry"
+Into a format like this:
+
+c("bell pepper", "bilberry", "blackberry", "blood orange", "blueberry", "cantaloupe", "chili pepper", "cloudberry", "elderberry", "lime", "lychee", "mulberry", "olive", "salal berry")
+
+
+```{r}
+fruits <- c(
+  "bell pepper",
+  "bilberry",
+  "blackberry",
+  "blood orange",
+  "blueberry",
+  "cantaloupe",
+  "chili pepper",
+  "cloudberry",
+  "elderberry",
+  "lime",
+  "lychee",
+  "mulberry",
+  "olive",
+  "salal berry"
+)
+
+# Convert the vector to a data frame
+fruits_df <- data.frame(fruits, row.names = 1:length(fruits))
+
+# Rename the column
+colnames(fruits_df) <- c("Fruit")
+
+# Capitalize the first letter of each fruit name
+fruits_df$Fruit <- sapply(fruits_df$Fruit, function(x) {
+  paste0(toupper(substring(x, 1, 1)), substring(x, 2))
+})
+
+# Show the transformed data
+print(fruits_df)
+
+```
+
+#### Describe, in words, what these expressions will match:
+
+
+```{r eval=FALSE}
+(.)\1\1
+```
+
+
+It will match any character (.) that appears three times in a row. For example, "aaa" would match this expression.
+
+
+2-This expression will match any two characters (.) that appear in the order of the second character followed by the first character. For example, "abab" would match this expression
+
+```{r eval=FALSE}
+"(.)(.)\\2\\1"
+```
+
+for example 
+
+```{r}
+# Create a string to match
+text <- "hello world"
+
+# Use the regex expression to match
+result <- regexpr("(.)(.)\\2\\1", text)
+
+# Check if there is a match
+if (result != -1) {
+  # Use the regmatches function to extract the matching substring
+  match <- regmatches(text, result)
+  print(match)
+} else {
+  print("hello waheeb")
+}
+```
+
+
+
+3-This expression will match any two characters denoted by . that appear twice in a row. For example, "abab" would match this expression.
+
+(..)\1
+
+
+4-This expression will match any three characters (denoted by .) where the first and third characters are the same and the second character is different. For example, "abcabc" would match this expression.
+
+
+```{r eval=FALSE}
+"(.).\\1.\\1"
+```
+
+
+----------------------------------------------------
+
+5-This expression will match any string of characters (.) where the first three characters appear in reverse order anywhere in the string. For example, "abcdcba" would match this expression.
+
+```{r eval=FALSE}
+"(.)(.)(.).*\\3\\2\\1"
+```
+
+
+#### Construct regular expressions to match words that:
+
+1- Start and end with the same character.
+
+This expression uses two capturing groups. The first (.) captures the first character of the word, and the second (.*\\1) captures any number of characters in between, followed by the same character as the first group.
+
+```{r eval=FALSE}
+"(.)(.*\\1)"
+```
+
+As an example 
+
+```{r}
+text <- "hello world"
+result <- regexpr("(.)(.*\\1)", text)
+
+if (result != -1) {
+  match <- regmatches(text, result)
+  print(match)
+} else {
+  print("hello waheeb")
+}
+
+```
+
+2- Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+
+This expression uses two capturing groups. The first (.) captures any single character, and the second .*\\1.*\\1 captures any number of characters in between the repeated pair of letters.
+
+
+```{r eval=FALSE}
+"(.).*\\1.*\\1"
+```
+
+As an example 
+
+```{r}
+text <- "hello world"
+result <- regexpr("(.).*\\1.*\\1", text)
+
+if (result != -1) {
+  match <- regmatches(text, result)
+  print(match)
+} else {
+  print("hello waheeb")
+}
+
+```
+
+3- Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+
+To match words that contain one letter repeated in at least three places, you can use the following regular expression:
+
+```{reval=FALSE}
+"(.)(.*\\1){2,}"
+```
+
+As an example 
+
+```{r}
+text <- "hello world"
+result <- regexpr("(.)(.*\\1){2,}", text)
+
+if (result != -1) {
+  match <- regmatches(text, result)
+  print(match)
+} else {
+  print("hello waheeb")
+}
+
+```
+
+
